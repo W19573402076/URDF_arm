@@ -1,0 +1,12 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# 编辑器本地配置（里面是写死的绝对路径）
+.vscode/
+
+# RL 训练产物。arm_rl/logs/ 下是五次训练的 205 个 checkpoint，共 1.2 G，主要是中间产物。
+# 只保留 README 里 v13 那一个（model_20000.pt，4.2 MB，严格成功率 90.5%），别人 clone
+# 完就能直接 `python play.py` 复现。那一个文件是用 `git add -f` 强制加进来的 ——
+# 被忽略的文件一旦被跟踪，后续改动 git 照常记录，不受这里的规则影响。
+arm_rl/logs*/

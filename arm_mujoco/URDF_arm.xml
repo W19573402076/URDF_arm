@@ -1,0 +1,76 @@
+<mujoco model="URDF_arm">
+  <compiler angle="radian" meshdir="assets/meshes" />
+  <option timestep="0.002" gravity="0 0 -9.81" integrator="implicitfast" />
+  <visual>
+    <headlight ambient="0.3 0.3 0.4" diffuse="0.5 0.5 0.55" specular="0.1 0.1 0.1" />
+  </visual>
+  <asset>
+    <mesh name="base_link" file="base_link.STL" />
+    <mesh name="Link1" file="Link1.STL" />
+    <mesh name="Link2" file="Link2.STL" />
+    <mesh name="Link3" file="Link3.obj" />
+    <mesh name="Link4" file="Link4.STL" />
+    <mesh name="Link5" file="Link5.STL" />
+    <mesh name="Link6" file="Link6.STL" />
+    <texture name="sky" type="skybox" builtin="gradient" rgb1="0.2 0.4 0.8" rgb2="0.55 0.75 0.98" width="256" height="256" />
+    <texture name="ground_tex" type="2d" builtin="checker" width="256" height="256" rgb1="0.28 0.30 0.28" rgb2="0.50 0.52 0.50" />
+    <material name="ground_mat" texture="ground_tex" texrepeat="40 40" reflectance="0.05" />
+  </asset>
+  <worldbody>
+    <geom type="mesh" rgba="0.776471 0.756863 0.737255 1" mesh="base_link" contype="0" conaffinity="0" />
+    <body name="Link1" pos="2.3163e-05 -0.00066671 0.04">
+      <inertial pos="0.00342298 -3.1826e-05 0.0560365" quat="0.706964 0.707242 0.00207795 -0.00258924" mass="1.06844" diaginertia="0.00169407 0.00132404 0.00097213" />
+      <joint name="Joint1" pos="0 0 0" axis="0 0 -1" range="-6.28 6.28" actuatorfrcrange="-20 20" armature="0.01" />
+      <geom type="mesh" rgba="0.898039 0.917647 0.929412 1" mesh="Link1" contype="0" conaffinity="0" />
+      <body name="Link2" pos="0.0215 0 0.083" quat="0.691997 -0.145396 0.691998 -0.145396">
+        <inertial pos="-0.105146 0.110205 0.0300379" quat="0.278982 0.648751 -0.277894 0.651203" mass="0.566389" diaginertia="0.00426372 0.00406593 0.00029958" />
+        <joint name="Joint2" pos="0 0 0" axis="0 0 -1" range="-2.79 0.35" actuatorfrcrange="-20 20" armature="0.01" />
+        <geom type="mesh" rgba="0.898039 0.917647 0.929412 1" mesh="Link2" contype="0" conaffinity="0" />
+        <body name="Link3" pos="-0.24148 0.25335 0.001">
+          <inertial pos="0.0178579 -0.0531336 -0.0277058" quat="-0.236018 0.666136 0.23951 0.665727" mass="1.27125" diaginertia="0.00151734 0.00104618 0.000899744" />
+          <joint name="Joint3" pos="0 0 0" axis="0 0 -1" range="0.35 2.79" actuatorfrcrange="-20 20" armature="0.01" />
+          <geom type="mesh" rgba="1 1 1 1" mesh="Link3" contype="0" conaffinity="0" />
+          <body name="Link4" pos="0.056107 -0.14106 -0.0328" quat="0.500001 1.34448e-06 0.866025 1.34448e-06">
+            <inertial pos="-0.0220995 -0.0738107 0.0259519" quat="0.816747 0.515491 -0.219104 0.138516" mass="0.752915" diaginertia="0.00134652 0.00123713 0.000417699" />
+            <joint name="Joint4" pos="0 0 0" axis="0.214989 0.902837 -0.372379" range="-6.28 6.28" actuatorfrcrange="-3 3" armature="0.01" />
+            <geom type="mesh" rgba="0.898039 0.917647 0.929412 1" mesh="Link4" contype="0" conaffinity="0" />
+            <body name="Link5" pos="-0.086074 -0.18688 0.053084" quat="0.500001 1.34448e-06 -0.866025 -1.34448e-06">
+              <inertial pos="-0.0105517 0.00683303 -0.0472273" quat="0.958631 -0.000148999 0.000606813 -0.28465" mass="0.209948" diaginertia="8.86649e-05 6.16338e-05 5.48327e-05" />
+              <joint name="Joint5" pos="0 0 0" axis="0 0 -1" range="-1.57 1.57" actuatorfrcrange="-3 3" armature="0.01" />
+              <geom type="mesh" rgba="0.792157 0.819608 0.933333 1" mesh="Link5" contype="0" conaffinity="0" />
+              <body name="Link6" pos="-0.0062894 0.0040857 -0.048" quat="0.677844 0.201319 0.677842 -0.201317">
+                <inertial pos="8.14232e-06 -1.54992e-05 0.0945845" quat="0.708161 -8.62769e-05 0.000562742 0.706051" mass="0.436535" diaginertia="0.000159019 0.000149151 0.000119044" />
+                <joint name="Joint6" pos="0 0 0" axis="0 0 -1" range="-6.28 6.28" actuatorfrcrange="-3 3" armature="0.01" />
+                <geom type="mesh" rgba="0.898039 0.917647 0.929412 1" mesh="Link6" contype="0" conaffinity="0" />
+                <site name="ee_site" type="sphere" size="0.012" rgba="0.2 1.0 0.3 1" />
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+    <geom name="ground" type="plane" size="5 5 0.1" material="ground_mat" friction="1.5 1.0 1.5" />
+    <light name="sun" pos="2 1.5 3" dir="-0.5 -0.4 -1" diffuse="1.0 0.95 0.8" specular="0.4 0.4 0.4" castshadow="true" />
+    <light name="sky" pos="0 0 3" dir="0 0 -1" diffuse="0.4 0.45 0.65" castshadow="false" />
+    <camera name="front" pos="0.5000 -0.7000 0.5000" xyaxes="0.8137 0.5812 -0.0000 -0.1914 0.2680 0.9442" />
+    <body name="ik_target" mocap="true" pos="0.0 0.35 0.35">
+      <geom name="ik_target_geom" type="sphere" size="0.045" rgba="0.9 0.15 0.15 0.28" contype="0" conaffinity="0" />
+      <geom name="ik_target_axis0" type="box" size="0.0700 0.0060 0.0060" rgba="1 0.25 0.25 1" contype="0" conaffinity="0" />
+      <geom name="ik_target_axis1" type="box" size="0.0060 0.0700 0.0060" rgba="0.25 1 0.35 1" contype="0" conaffinity="0" />
+      <geom name="ik_target_axis2" type="box" size="0.0060 0.0060 0.0700" rgba="0.35 0.5 1 1" contype="0" conaffinity="0" />
+      <site name="ik_target_site" type="sphere" size="0.012" rgba="1.0 0.35 0.35 1" />
+    </body>
+  </worldbody>
+  <actuator>
+    <position name="Joint1_servo" joint="Joint1" kp="100" kv="50" ctrlrange="-6.2800 6.2800" forcerange="-20.0000 20.0000" />
+    <position name="Joint2_servo" joint="Joint2" kp="100" kv="50" ctrlrange="-2.7900 0.3500" forcerange="-20.0000 20.0000" />
+    <position name="Joint3_servo" joint="Joint3" kp="100" kv="50" ctrlrange="0.3500 2.7900" forcerange="-20.0000 20.0000" />
+    <position name="Joint4_servo" joint="Joint4" kp="100" kv="50" ctrlrange="-6.2800 6.2800" forcerange="-3.0000 3.0000" />
+    <position name="Joint5_servo" joint="Joint5" kp="100" kv="50" ctrlrange="-1.5700 1.5700" forcerange="-3.0000 3.0000" />
+    <position name="Joint6_servo" joint="Joint6" kp="100" kv="50" ctrlrange="-6.2800 6.2800" forcerange="-3.0000 3.0000" />
+  </actuator>
+  <keyframe>
+    <key name="home" qpos="0.000000 0.000000 0.350000 0.000000 0.000000 0.000000" ctrl="0.000000 0.000000 0.350000 0.000000 0.000000 0.000000" />
+  </keyframe>
+</mujoco>
+
