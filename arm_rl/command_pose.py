@@ -409,9 +409,37 @@ def main():
 
 
 def _print_reference_pose(env):
-    """打印零位时末端的位姿，作为自己设目标时的参照起点。"""
-    ee_p = env.ee_pos_rel[0].cpu().numpy()
-    ee_q = env.ee_quat[0].cpu().numpy()             # (x,y,z,w)
+    """打印零位（default_dof_pos）时末端的位姿，作为自己设目标时的参照起点。
+
+    ⚠️ **不能直接读 `env.ee_pos_rel` / `env.ee_quat`**。这两个量只在
+    `_post_physics_step_callback` 里刷新，而那只在 `step()` 的路径上；调用本函数时
+    刚做完 `env.reset()`、一步都没走过，读到的是上一次刷新留下的**缓存值**，
+    和当前关节角对不上（实测姿态能差 100° 以上）。而且 `reset_idx` 只写了关节角，
+    PhysX 的刚体变换要 `simulate` 之后才更新 —— 这也是 `_resample_commands` 里
+    要先走一步再读的原因。
+
+    所以这里显式把关节角设成 default、走一步物理、读回来，再把关节状态还原。
+    走那一步会让关节角被积分改变约 1e-3 rad，对「给个参照起点」这个用途无所谓。
+    """
+    ids = torch.arange(env.num_envs, dtype=torch.int32, device=env.device)
+    keep = env.dof_state_3d.clone()
+    env.dof_state_3d[:, :, 0] = env.default_dof_pos
+    env.dof_state_3d[:, :, 1] = 0.0
+    env._write_dof_states(ids)
+
+    env.gym.simulate(env.sim)
+    env.gym.fetch_results(env.sim, True)
+    env.gym.refresh_rigid_body_state_tensor(env.sim)
+
+    ee_p = (env.rigid_body_states[0, env.eef_index, 0:3]
+            - env.env_origins[0]).cpu().numpy()
+    ee_q = env.rigid_body_states[0, env.eef_index, 3:7].cpu().numpy()   # (x,y,z,w)
+
+    # 还原，别影响这一局的初始状态
+    env.dof_state_3d[:] = keep
+    env._write_dof_states(ids)
+    env.gym.refresh_dof_state_tensor(env.sim)
+
     eul = _quat_to_euler_deg(ee_q)
     print("零位时末端（可直接拿来当起点改）：")
     print("    --pos %.3f %.3f %.3f --euler %.1f %.1f %.1f" % (ee_p[0], ee_p[1], ee_p[2],
